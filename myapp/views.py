@@ -1,27 +1,33 @@
-from django.shortcuts import redirect, render
-from .models import Document
-from .forms import DocumentForm
+from django.shortcuts import render
+from .models import TasksScheduler
+from .forms import TasksFileForm
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def my_view(request):
-    message = 'Tasks files manager'
-
+    error = None
     if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
+        form = TasksFileForm(request.POST, request.FILES)
         if form.is_valid():
-            newdoc = Document(docfile=request.FILES['docfile'])
-            newdoc.save()
+            # import ipdb; ipdb.set_trace()
+            sched = TasksScheduler(tasks_file=request.FILES["tasks_file"])
+            sched.save()
 
-            # Redirect to the document list after POST
-            return redirect('my-view')
+            # TODO: review log
+            logger.info("The schedule id: %d was created", sched.id)
+
+            result = {
+                "raw_tasks": sched.get_or_create_raw_tasks(),
+                "best_schedule": sched.get_or_create_best_schedule(),
+            }
+            return render(request, 'result.html', result)
         else:
-            message = 'The form is not valid. Fix the following error:'
+            error = 'The form is not valid. Fix the following error: '
     else:
-        form = DocumentForm()  # An empty, unbound form
+        form = TasksFileForm()
 
-    # Load documents for the list page
-    documents = Document.objects.all()
-
-    # Render list page with the documents and the form
-    context = {'documents': documents, 'form': form, 'message': message}
-    return render(request, 'list.html', context)
+    context = {'form': form, 'error': error}
+    return render(request, 'upload.html', context)

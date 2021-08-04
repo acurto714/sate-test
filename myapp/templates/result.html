@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tasks Manager Test</title>
+    </head>
+
+    <body>
+        {% if raw_tasks and best_schedule %}
+            <p>For the following tasks:</p>
+            <ul>
+                {% for task in raw_tasks %}
+                    <li>{{ task }}</li>
+                {% endfor %}
+            </ul>
+
+            <p>the best schedule is:</p>
+            <ul>
+                {% for sched in best_schedule %}
+                    <li>{{ sched }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No schedule found.</p>
+        {% endif %}
+    </body>
+</html>

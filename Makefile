@@ -31,8 +31,9 @@ clean-test: ## remove test and coverage artifacts
 	rm -rf report.xml
 
 clean-django: ## remove DB and media files
-	rm -rf media/*
-	rm db.sqlite3
+	find . -name '*/migrations' -exec rm -f {} +
+	find . -name 'db.sqlite3' -exec rm -f {} +
+	find . -name 'media/*' -exec rm -f {} +
 
 test: ## run all tests
 	pytest
