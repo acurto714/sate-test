@@ -15,7 +15,7 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+clean: clean-pyc clean-test clean-django ## remove all build, test, coverage and Python artifacts
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
@@ -29,6 +29,10 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 	rm -rf report.xml
+
+clean-django: ## remove DB and media files
+	rm -rf media/*
+	rm db.sqlite3
 
 test: ## run all tests
 	pytest
