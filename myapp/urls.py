@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import my_view
+from .views import schedule
 
 urlpatterns = [
-    path('', my_view, name='my-view')
+    path('', schedule, name='schedule')
 ]
