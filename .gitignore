@@ -131,3 +131,6 @@ dmypy.json
 
 # own files
 media
+
+# OSX files
+*.DS_Store
