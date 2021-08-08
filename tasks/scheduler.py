@@ -1,3 +1,4 @@
+import sys
 import logging
 from typing import List
 
@@ -62,34 +63,46 @@ def are_compatibles(t1: dict, t2: dict) -> bool:
 
 
 def from_tasks_to_graph(tasks: List[dict]) -> Graph:
-    """
-    TBD
+    """Generates the graph associated to the task list.
+
+    The graph nodes are each of the listed tasks, and the associated weight
+    with each one is the task "profit". The graph edges are built using tasks
+    "resources", where (u, v) in E if u resources is incompatibles with v
+    resources.
+
+    Example: suppose the following tasks' list
+        - tasks: [
+            {"name": "t1", "resources": ["a", "b", "c"], "profit": 9.4},
+            {"name": "t2", "resources": ["a", "d"], "profit": 1.4},
+            {"name": "t3", "resources": ["b"], "profit": 3.2},
+            {"name": "t4", "resources": ["c", "d"], "profit": 6.3},
+        ]
+
+    then, the associated graph is:
+    G = (V, E) = ({t1, t2, t3, t4}, {(t1, t2), (t1, t3), (t1, t4), (t2, t4)})
+
+    Args:
+        tasks: list of tasks to be analized.
+
+    Return:
+        The graph associated to tasks' list
     """
     graph = Graph()
-    # graph nodes creation
-    for task in tasks:
+    while tasks:
+        t1 = tasks.pop()
         try:
-            graph.add_node(task[NAME_KEY], profit=task[PROFIT_KEY])
+            graph.add_node(t1[NAME_KEY], profit=t1[PROFIT_KEY])
         except KeyError:
-            # logger.error("Invalid task format for task: %s", str(task))
-            pass
-    # graph edges creation
-    # import ipdb; ipdb.set_trace()
-    # TODO: optimize
-    # for t1 in tasks:
-    #     for t2 in tasks:
-    #         print(f"{t1[NAME_KEY]}, {t2[NAME_KEY]}")
-    #         if not are_compatibles(t1, t2):
-    #             graph.add_edge(t1[NAME_KEY], t2[NAME_KEY])
-    graph.add_edge("t1", "t2")
-    graph.add_edge("t1", "t3")
-    graph.add_edge("t1", "t4")
-    graph.add_edge("t2", "t4")
+            logging.error("Invalid task format for task: %s", str(t1))
+            sys.exit(-1)
+        for t2 in tasks:
+            if not are_compatibles(t1, t2):
+                graph.add_edge(t1[NAME_KEY], t2[NAME_KEY])
     return graph
 
 
 def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
-    """Gets tasks list that generates the highest profit.
+    """Gets tasks' list that generates the highest profit.
 
     Args:
         tasks: list of tasks to be analized.
@@ -115,6 +128,6 @@ if __name__ == "__main__":
         {NAME_KEY: "t3", RESOURCES_KEY: ["b"], PROFIT_KEY: 3.6},
         {NAME_KEY: "t4", RESOURCES_KEY: ["c"], PROFIT_KEY: 6.3},
     ]
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     result = get_optimal_tasks_schedule(tasks)
     print(result)
