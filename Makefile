@@ -1,4 +1,4 @@
-.PHONY: clean clean-pyc help
+.PHONY: clean clean-test clean-pyc help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -15,7 +15,7 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-pyc clean-django ## remove all build, test, coverage and Python artifacts
+clean: clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
@@ -23,16 +23,19 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-django: ## remove DB and media files
-	find . -name '*/migrations' -exec rm -f {} +
-	find . -name 'db.sqlite3' -exec rm -f {} +
-	find . -name 'media/*' -exec rm -f {} +
+clean-test: ## remove test and coverage artifacts
+	rm -f .coverage
+	rm -fr htmlcov/
+	rm -fr .pytest_cache
+	rm -rf report.xml
 
-test: ## run all tests
+test: ## run tests quickly with the default Python
 	pytest
+	# TODO: add coverage commands
 
 install: clean ## install the package to the active Python's site-packages
-	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
+	pre-commit install
 
 migrate: ## run database migrations
 	./manage.py migrate

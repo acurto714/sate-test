@@ -1,1 +1,4 @@
-django>=3.0,<4.0
+# Production requirements
+Django==3.*
+
+# drf-yasg==1.17.1
