@@ -5,3 +5,4 @@ flake8==3.9.2
 pre-commit==2.14.0
 black==21.5b1
 ipython==7.26.0
+ipdb==0.13.9
