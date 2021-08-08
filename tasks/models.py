@@ -1,5 +1,6 @@
 import json
 from django.db import models
+from tasks.scheduler import get_optimal_tasks_schedule
 
 
 class TasksScheduler(models.Model):
@@ -19,9 +20,8 @@ class TasksScheduler(models.Model):
 
     def get_or_create_best_schedule(self):
         if not self.best_schedule:
-            tasks = self.get_or_create_raw_tasks()
-            # TODO: write code
-            self.best_schedule = tasks
-            # TODO: end the code
+            raw_tasks = self.get_or_create_raw_tasks()
+            tasks = raw_tasks.copy()
+            self.best_schedule = get_optimal_tasks_schedule(tasks)
             self.save()
         return self.best_schedule

@@ -15,11 +15,7 @@
             </ul>
 
             <p>the best schedule is:</p>
-            <ul>
-                {% for sched in best_schedule %}
-                    <li>{{ sched }}</li>
-                {% endfor %}
-            </ul>
+            <p>{{ best_schedule }}</p>
         {% else %}
             <p>No schedule found.</p>
         {% endif %}

@@ -1,6 +1,6 @@
 import sys
 import logging
-from typing import List
+from typing import List, Any
 
 from networkx import Graph
 from networkx.algorithms.clique import MaxWeightClique
@@ -45,21 +45,32 @@ class MaxWeightTasksSelector(MaxWeightClique):
             self.expand(new_C, new_C_weight, new_P)
 
 
-def is_sublist(lst1, lst2):
-    return all(i in lst2 for i in lst1)
+def is_sublist(lst: List[Any], sub_lst: List[Any]) -> bool:
+    return all(item in sub_lst for item in lst)
 
 
-def are_compatibles(t1: dict, t2: dict) -> bool:
-    # return (t1 != t2) and (t1[RESOURCES_KEY] not in t2[RESOURCES_KEY]) and
-    # (t2[RESOURCES_KEY] not in t1[RESOURCES_KEY])
-    if t1 == t2:
-        return False
-    elif is_sublist(t1[RESOURCES_KEY], t2[RESOURCES_KEY]):
-        return False
-    elif is_sublist(t2[RESOURCES_KEY], t1[RESOURCES_KEY]):
-        return False
-    else:
-        return True
+def are_incompatibles(t1: dict, t2: dict) -> bool:
+    """Decide if two tasks are incompatibles.
+
+    Two tasks are incompatible if they use the same resource.
+
+    Examples:
+        1. t1 = {"resources": ["a", "b"], ...}
+           t2 = {"resources: ["a"], ...}
+           are incompatibles because both use resource "a".
+        2. t1 = {"resources": ["b"], ...}
+           t2 = {"resources: ["a"], ...}
+           are compatibles because don't share resources.
+
+    Args:
+        t1, t2: raw tasks to compare.
+
+    Return:
+
+    """
+    t1r = t1[RESOURCES_KEY]
+    t2r = t2[RESOURCES_KEY]
+    return (t1 == t2) or is_sublist(t1r, t2r) or is_sublist(t2r, t1r)
 
 
 def from_tasks_to_graph(tasks: List[dict]) -> Graph:
@@ -96,7 +107,7 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
             logging.error("Invalid task format for task: %s", str(t1))
             sys.exit(-1)
         for t2 in tasks:
-            if not are_compatibles(t1, t2):
+            if are_incompatibles(t1, t2):
                 graph.add_edge(t1[NAME_KEY], t2[NAME_KEY])
     return graph
 
@@ -121,6 +132,7 @@ def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
     return mwts.incumbent_nodes
 
 
+# TODO: remove
 if __name__ == "__main__":
     tasks = [
         {NAME_KEY: "t1", RESOURCES_KEY: ["a", "b", "c"], PROFIT_KEY: 9.4},
