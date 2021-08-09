@@ -11,18 +11,20 @@ from tasks.scheduler import (
 
 
 @pytest.mark.parametrize(
-    "t1, t2, expected",
+    "t1, t2, expected_result",
     [
         (["a"], ["b"], False),
+        (["a"], ["a"], True),
         (["a", "b"], ["c"], False),
         (["a", "c"], ["c"], True),
         ([], [], False),
-        (["a"], ["a"], True),
+        (["a"], [], False),
     ],
 )
-def test_are_incompatibles_return_expected(t1, t2, expected):
+def test_are_incompatibles_return_expected(t1, t2, expected_result):
+    print(f"t1: {t1}, t2: {t2}, expected: {expected_result}")
     result = are_incompatibles(t1, t2)
-    assert result == expected
+    assert result == expected_result
 
 
 @pytest.mark.parametrize(
