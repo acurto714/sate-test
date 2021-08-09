@@ -9,6 +9,7 @@ Let's assume that you have `pyenv` installed on your machine (if not, you can in
 pyenv virtualenv 3.7.8 satellogic
 pyenv activate satellogic
 make install
+./manage.py makemigrations tasks
 make migrate
 make run
 ```
