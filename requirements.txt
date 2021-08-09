@@ -1,5 +1,3 @@
 # Production requirements
 Django==3.2.6
 networkx==2.6.2
-
-# drf-yasg==1.17.1

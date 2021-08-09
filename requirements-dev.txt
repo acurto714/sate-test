@@ -1,5 +1,5 @@
 # Development requirements
--r requirements-test.txt  # Include the production and testing requirements.
+-r requirements-test.txt
 
 flake8==3.9.2
 pre-commit==2.14.0
