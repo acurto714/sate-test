@@ -16,7 +16,7 @@ class MaxWeightTasksSelector(MaxWeightClique):  # pragma: no cover
     library, where only the following methods are overwritten:
     - __init__: only weights verification was suppressed because that didn't
         allow floats values.
-    - expand: TODO finish doc
+    - expand: to replace the search for adjacent nodes with non-adjacent nodes.
     """
 
     def __init__(self, G, weight):
@@ -111,8 +111,14 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
 
 
 def get_maximum_weighted_independient_set(graph: Graph) -> List[str]:
-    """
-    TODO
+    """Obtains the largest nodes subset such that it maximizes the sum of
+    the weights.
+
+    Args:
+        graph: graph where to search for the set.
+
+    Returns:
+        Maximum independient set.
     """
     mwts = MaxWeightTasksSelector(graph, weight=PROFIT_KEY)
     mwts.find_max_weight_clique()
