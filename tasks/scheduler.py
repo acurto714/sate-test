@@ -130,5 +130,5 @@ def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
         List with tasks names that belong to the best schedule.
     """
     graph = from_tasks_to_graph(tasks)
-    schedule = get_optimal_tasks_schedule(graph)
+    schedule = get_maximum_weighted_independient_set(graph)
     return schedule
