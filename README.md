@@ -26,12 +26,12 @@ TBD
 The environment installed in the first step corresponds to a developer env. It's possible to handle everything from a Makefile.
 These settings include: flake8, black, pytest, coverage, and pre-commit.
 
-
 ## Some possible improvements
-1. Load file and enqueue job to search the optimus schedule. Return an ID to be able search the result.
+Below are some tests/improvements that could be done but that for time reasons weren't made in this first version.
 
-
-
-## TODO list
-* logs
-* docker image and docker compose
+1. Use a jobs queue: when uploading the file, new job is queued to process it in background and only an ID is returned.
+So, that later it's possible to search for the result by the ID.
+1. Add download result possibility.
+1. Try another faster algorithm, especially for large cases (maybe in C?).
+1. Use docker to make the code more portable.
+1. Use swagger to facilitate the interface with the APIs.
