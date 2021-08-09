@@ -10,7 +10,7 @@ RESOURCES_KEY = "resources"
 PROFIT_KEY = "profit"
 
 
-class MaxWeightTasksSelector(MaxWeightClique):
+class MaxWeightTasksSelector(MaxWeightClique):  # pragma: no cover
     """
     This class is a small extension of `MaxWeightClique` from the networkx
     library, where only the following methods are overwritten:
@@ -120,7 +120,7 @@ def get_maximum_weighted_independient_set(graph: Graph) -> List[str]:
     return mwts.incumbent_nodes
 
 
-def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
+def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:  # pragma: no cover
     """Gets tasks list that generates the highest profit.
 
     Args:

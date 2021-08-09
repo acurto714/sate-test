@@ -25,13 +25,13 @@ clean-pyc: ## remove Python file artifacts
 
 clean-test: ## remove test and coverage artifacts
 	rm -f .coverage
-	rm -fr htmlcov/
 	rm -fr .pytest_cache
-	rm -rf report.xml
 
-test: ## run tests quickly with the default Python
+test: ## run tests with pytest
 	pytest
-	# TODO: add coverage commands
+
+coverage: ## run coverage
+	 coverage run --source=. -m pytest; coverage report -m
 
 install: clean ## install the package to the active Python's site-packages
 	pip install -r requirements-dev.txt
@@ -40,5 +40,5 @@ install: clean ## install the package to the active Python's site-packages
 migrate: ## run database migrations
 	./manage.py migrate
 
-run : ## run server
+run : ## run django server
 	./manage.py runserver
