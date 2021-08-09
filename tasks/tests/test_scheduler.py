@@ -6,7 +6,7 @@ from tasks.scheduler import (
     PROFIT_KEY,
     are_incompatibles,
     # from_tasks_to_graph,
-    # get_maximum_weighted_independient_set,
+    get_maximum_weighted_independient_set,
 )
 
 
@@ -89,15 +89,17 @@ def test_from_tasks_to_graph_return_expected_graph(tasks, fixture_graph, request
 @pytest.mark.parametrize(
     "fixture_graph, expected_schedule",
     [
-        ("g1", ["t2", "t3"]),
-        ("g2", []),
-        #  ...
+        ("g1", ["t1"]),
+        ("g2", ["t1", "t2"]),
+        ("g3", ["t1", "t2", "t3"]),
+        ("g4", []),
+        ("g5", ["t1"]),
+        ("g6", ["t1"]),
     ],
 )
 def test_get_maximum_weighted_independient_set_return_expected(
     fixture_graph, expected_schedule, request
 ):
-    # graph = request.getfixturevalue(fixture_graph)
-    # schedule = get_maximum_weighted_independient_set(graph)
-    # assert schedule == expected_schedule
-    pass
+    graph = request.getfixturevalue(fixture_graph)
+    schedule = get_maximum_weighted_independient_set(graph)
+    assert set(schedule) == set(expected_schedule)  # because orer doesn`t care

@@ -90,7 +90,7 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
         tasks: list of tasks to analize.
 
     Return:
-        The associated graph to tasks list
+        The associated graph to tasks list.
     """
     graph = Graph()
     while tasks:
