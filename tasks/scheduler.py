@@ -106,6 +106,20 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
     return graph
 
 
+def get_maximum_weighted_independient_set(graph: Graph) -> List[str]:
+    """
+    TODO
+    """
+    mwts = MaxWeightTasksSelector(graph, weight=PROFIT_KEY)
+    mwts.find_max_weight_clique()
+    logging.info(
+        "The max profit is: %d and the tasks schedule is: %s",
+        mwts.incumbent_weight,
+        mwts.incumbent_nodes,
+    )
+    return mwts.incumbent_nodes
+
+
 def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
     """Gets tasks' list that generates the highest profit.
 
@@ -116,11 +130,5 @@ def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
         List with tasks names that belong to the best schedule.
     """
     graph = from_tasks_to_graph(tasks)
-    mwts = MaxWeightTasksSelector(graph, weight=PROFIT_KEY)
-    mwts.find_max_weight_clique()
-    logging.info(
-        "The max profit is: %d and the tasks schedule is: %s",
-        mwts.incumbent_weight,
-        mwts.incumbent_nodes,
-    )
-    return mwts.incumbent_nodes
+    schedule = get_optimal_tasks_schedule(graph)
+    return schedule
