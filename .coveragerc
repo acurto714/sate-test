@@ -12,3 +12,4 @@ omit=
     */admin.py
     */apps.py
     */urls.py
+    tasks/exceptions.py

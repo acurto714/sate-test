@@ -24,8 +24,8 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test: ## remove test and coverage artifacts
+	find . -name '*.pytest_cache' -exec rm -rf {} +
 	rm -f .coverage
-	rm -fr .pytest_cache
 
 test: ## run tests with pytest
 	pytest

@@ -1,6 +1,6 @@
 import json
 from django.db import models
-from tasks.scheduler import get_optimal_tasks_schedule
+from tasks.scheduler import get_highest_profit_schedule
 
 
 class TasksScheduler(models.Model):
@@ -8,7 +8,7 @@ class TasksScheduler(models.Model):
     raw_tasks = models.JSONField(blank=True, null=True)
     best_schedule = models.JSONField(blank=True, null=True)
 
-    def get_or_create_raw_tasks(self):
+    def _get_raw_tasks(self):
         if not self.raw_tasks:
             self.raw_tasks = []
             with open(self.tasks_file.path, "+r") as file:
@@ -18,10 +18,17 @@ class TasksScheduler(models.Model):
             self.save()
         return self.raw_tasks
 
-    def get_or_create_best_schedule(self):
+    def _get_best_sched(self):
         if not self.best_schedule:
-            raw_tasks = self.get_or_create_raw_tasks()
+            raw_tasks = self._get_raw_tasks()
             tasks = raw_tasks.copy()
-            self.best_schedule = get_optimal_tasks_schedule(tasks)
+            self.best_schedule = get_highest_profit_schedule(tasks)
             self.save()
         return self.best_schedule
+
+    def get_highest_profit_schedule(self) -> dict:  # pragma: no cover
+        result = {
+            "raw_tasks": self._get_raw_tasks(),
+            "best_schedule": self._get_best_sched(),
+        }
+        return result

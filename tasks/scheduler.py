@@ -1,5 +1,5 @@
-import sys
 import logging
+from tasks.exceptions import InvalidTaskFormat
 from typing import List, Any
 
 from networkx import Graph
@@ -98,8 +98,12 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
         try:
             graph.add_node(t1[NAME_KEY], profit=t1[PROFIT_KEY])
         except KeyError:
-            logging.error("Invalid task format for task: %s", str(t1))
-            sys.exit(-1)
+            msg = (
+                f"Invalid task format for task: {str(t1)}. Please, review task"
+                " structure and try again."
+            )
+            logging.error(msg)
+            raise InvalidTaskFormat(msg=msg)
         for t2 in tasks:
             if are_incompatibles(t1[RESOURCES_KEY], t2[RESOURCES_KEY]):
                 graph.add_edge(t1[NAME_KEY], t2[NAME_KEY])
@@ -120,7 +124,7 @@ def get_maximum_weighted_independient_set(graph: Graph) -> List[str]:
     return mwts.incumbent_nodes
 
 
-def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:  # pragma: no cover
+def get_highest_profit_schedule(tasks: List[dict]) -> List[str]:  # pragma: no cover
     """Gets tasks list that generates the highest profit.
 
     Args:
