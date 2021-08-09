@@ -16,7 +16,7 @@ class MaxWeightTasksSelector(MaxWeightClique):
     library, where only the following methods are overwritten:
     - __init__: only weights verification was suppressed because that didn't
         allow floats values.
-    - expand: TBD, why? research
+    - expand: TODO finish doc
     """
 
     def __init__(self, G, weight):
@@ -45,32 +45,26 @@ class MaxWeightTasksSelector(MaxWeightClique):
             self.expand(new_C, new_C_weight, new_P)
 
 
-def is_sublist(lst: List[Any], sub_lst: List[Any]) -> bool:
-    return all(item in sub_lst for item in lst)
-
-
-def are_incompatibles(t1: dict, t2: dict) -> bool:
-    """Decide if two tasks are incompatibles.
+def are_incompatibles(t1_resources: List[Any], t2_resources: List[Any]) -> bool:
+    """Decide if two tasks resources are incompatibles.
 
     Two tasks are incompatible if they use the same resource.
 
     Examples:
-        1. t1 = {"resources": ["a", "b"], ...}
-           t2 = {"resources: ["a"], ...}
+        1. t1 = ["a", "b"], t2 = ["a"]
            are incompatibles because both use resource "a".
-        2. t1 = {"resources": ["b"], ...}
-           t2 = {"resources: ["a"], ...}
+        2. t1 = ["b"], t2 = ["a"]
            are compatibles because don't share resources.
 
     Args:
         t1, t2: raw tasks to compare.
 
     Return:
-
+        Boolean value that indicates if tasks' resources are incompatible.
     """
-    t1r = t1[RESOURCES_KEY]
-    t2r = t2[RESOURCES_KEY]
-    return (t1 == t2) or is_sublist(t1r, t2r) or is_sublist(t2r, t1r)
+    return any(item in t2_resources for item in t1_resources) or any(
+        item in t1_resources for item in t2_resources
+    )
 
 
 def from_tasks_to_graph(tasks: List[dict]) -> Graph:
@@ -107,7 +101,7 @@ def from_tasks_to_graph(tasks: List[dict]) -> Graph:
             logging.error("Invalid task format for task: %s", str(t1))
             sys.exit(-1)
         for t2 in tasks:
-            if are_incompatibles(t1, t2):
+            if are_incompatibles(t1[RESOURCES_KEY], t2[RESOURCES_KEY]):
                 graph.add_edge(t1[NAME_KEY], t2[NAME_KEY])
     return graph
 
@@ -130,16 +124,3 @@ def get_optimal_tasks_schedule(tasks: List[dict]) -> List[str]:
         mwts.incumbent_nodes,
     )
     return mwts.incumbent_nodes
-
-
-# TODO: remove
-if __name__ == "__main__":
-    tasks = [
-        {NAME_KEY: "t1", RESOURCES_KEY: ["a", "b", "c"], PROFIT_KEY: 9.4},
-        {NAME_KEY: "t2", RESOURCES_KEY: ["a"], PROFIT_KEY: 1.4},
-        {NAME_KEY: "t3", RESOURCES_KEY: ["b"], PROFIT_KEY: 3.6},
-        {NAME_KEY: "t4", RESOURCES_KEY: ["c"], PROFIT_KEY: 6.3},
-    ]
-    # import ipdb; ipdb.set_trace()
-    result = get_optimal_tasks_schedule(tasks)
-    print(result)
