@@ -1,3 +1,4 @@
+from tasks.exceptions import InvalidTaskFormat
 import pytest
 import networkx as nx
 from tasks.scheduler import (
@@ -25,6 +26,18 @@ def test_are_incompatibles_return_expected(t1, t2, expected_result):
     print(f"t1: {t1}, t2: {t2}, expected: {expected_result}")
     result = are_incompatibles(t1, t2)
     assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "tasks",
+    [
+        ([{"nombre": "t1", RESOURCES_KEY: ["a", "b"], PROFIT_KEY: 9.4}]),
+        ([{NAME_KEY: "t1", RESOURCES_KEY: ["a", "b"], "ganancia": 9.4}]),
+    ],
+)
+def test_from_tasks_to_graph_raises_exception_when_recieve_invalid_tasks(tasks):
+    with pytest.raises(InvalidTaskFormat):
+        from_tasks_to_graph(tasks)
 
 
 @pytest.mark.parametrize(
