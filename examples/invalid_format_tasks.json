@@ -1,0 +1,5 @@
+[
+    {"name": "foto cliente 1098", "resources": ["camara", "disco", "proc"] , "profit": 9.2},
+    {"name": "limpieza de disco", "resources": ["disco"] , "profit": 0.4},
+    {"nombre": "upgrade a v2.1", "resources": ["proc"] , "profit": 2.9}
+]
