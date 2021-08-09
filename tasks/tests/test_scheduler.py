@@ -1,11 +1,11 @@
 import pytest
-
+import networkx as nx
 from tasks.scheduler import (
     NAME_KEY,
     RESOURCES_KEY,
     PROFIT_KEY,
     are_incompatibles,
-    # from_tasks_to_graph,
+    from_tasks_to_graph,
     get_maximum_weighted_independient_set,
 )
 
@@ -60,7 +60,7 @@ def test_are_incompatibles_return_expected(t1, t2, expected_result):
                 {NAME_KEY: "t1", RESOURCES_KEY: ["a", "b", "c"], PROFIT_KEY: 9.4},
                 {NAME_KEY: "t2", RESOURCES_KEY: ["a", "d", "e"], PROFIT_KEY: 1.4},
                 {NAME_KEY: "t3", RESOURCES_KEY: ["b", "e", "d"], PROFIT_KEY: 3.6},
-                {NAME_KEY: "t4", RESOURCES_KEY: ["c", "d"], PROFIT_KEY: 3.6},
+                {NAME_KEY: "t4", RESOURCES_KEY: ["c", "d"], PROFIT_KEY: 3.1},
             ],
             "g5",
         ),
@@ -74,16 +74,15 @@ def test_are_incompatibles_return_expected(t1, t2, expected_result):
     ],
 )
 def test_from_tasks_to_graph_return_expected_graph(tasks, fixture_graph, request):
-    # import ipdb; ipdb.set_trace()
-    # expected_graph = request.getfixturevalue(fixture_graph)  # to get fixture named fixture_graph
-    # graph = from_tasks_to_graph(tasks)
-
-    # em = iso.numerical_edge_match(PROFIT_KEY)
-    # assert nx.is_isomorphic(graph, expected_graph, edge_match=em) # match weights
-    # assert graph.nodes == expected_graph.nodes
-    # assert graph.edges == expected_graph.edges
-    # TODO: define how to compare two graphs
-    pass
+    expected_graph = request.getfixturevalue(
+        fixture_graph
+    )  # to get fixture named fixture_graph
+    graph = from_tasks_to_graph(tasks)
+    assert nx.is_isomorphic(
+        graph,
+        expected_graph,
+        node_match=lambda n1, n2: n1[PROFIT_KEY] == n2[PROFIT_KEY],
+    )
 
 
 @pytest.mark.parametrize(
